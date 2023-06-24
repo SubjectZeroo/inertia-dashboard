@@ -7,6 +7,7 @@ use App\Http\Resources\PermissionResource;
 use App\Http\Resources\RoleResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Permission;
@@ -20,7 +21,6 @@ class RolesController extends Controller
      */
     public function index(): Response
     {
-
         return Inertia::render('Roles/Index', [
             'filters' => FacadesRequest::all('search'),
             'roles' => RoleResource::collection(
@@ -44,7 +44,7 @@ class RolesController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CreateRoleRequest $request)
+    public function store(CreateRoleRequest $request): RedirectResponse
     {
         $role = Role::create(['name' => $request->name]);
 
@@ -52,7 +52,7 @@ class RolesController extends Controller
             $role->syncPermissions($request->input('permissions.*.name'));
         }
 
-        return redirect(route('roles'));
+        return Redirect::route('roles.index')->with('toast', 'Rol Creado');
     }
 
     /**
@@ -78,7 +78,7 @@ class RolesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CreateRoleRequest $request, Role $role)
+    public function update(CreateRoleRequest $request, Role $role): RedirectResponse
     {
         $role->update([
             'name' => $request->name
@@ -86,7 +86,7 @@ class RolesController extends Controller
 
         $role->syncPermissions($request->input('permissions.*.name'));
 
-        return redirect(route('roles'));
+        return Redirect::route('roles.index')->with('toast', 'Rol Actualizado');
     }
 
     /**
@@ -96,6 +96,6 @@ class RolesController extends Controller
     {
         $role->delete();
 
-        return redirect(route('roles'));
+        return redirect(route('roles.index'));
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Requests\PermissionRequestCreate;
 use App\Http\Resources\PermissionResource;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redirect;
 use Inertia\Inertia;
 use Inertia\Response;
 use Spatie\Permission\Models\Permission;
@@ -43,7 +44,7 @@ class PermissionsController extends Controller
     {
         Permission::create($request->validated());
 
-        return redirect(route('permissions'));
+        return Redirect::route('permissions.index')->with('toast', 'Permiso Creado');
     }
 
     /**
@@ -74,7 +75,7 @@ class PermissionsController extends Controller
     {
         $permission->update($request->validated());
 
-        return redirect(route('permissions'));
+        return Redirect::route('permissions.index')->with('toast', 'Permiso Actualizado');
     }
 
     /**

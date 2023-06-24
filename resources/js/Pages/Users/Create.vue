@@ -2,16 +2,18 @@
 import { Link, Head, useForm } from "@inertiajs/vue3";
 import { onMounted, ref, watch } from "vue";
 import AppLayout from "@/Layouts/AppLayout.vue";
-import InputLabel from '@/Components/InputLabel.vue';
-import TextInput from '@/Components/TextInput.vue';
-import InputError from '@/Components/InputError.vue';
-import LoadingButton from '@/Components/LoadingButton.vue';
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+import InputError from "@/Components/InputError.vue";
+import LoadingButton from "@/Components/LoadingButton.vue";
 import VueMultiselect from "vue-multiselect";
-
+import Label from "@/Components/Label.vue";
+import Input from "@/Components/Input.vue";
+import Field from "@/Components/Field.vue";
 const props = defineProps({
-    roles: Array,
-    permissions: Array
-})
+  roles: Array,
+  permissions: Array,
+});
 
 const form = useForm({
   name: "",
@@ -28,6 +30,7 @@ const submit = () => {
     onFinish: () => form.reset("password", "password_confirmation"),
   });
 };
+
 </script>
 
 <template>
@@ -98,98 +101,52 @@ const submit = () => {
           <h3 class="mb-4 text-xl font-semibold dark:text-white">Información General</h3>
           <form @submit.prevent="submit">
             <div class="grid grid-cols-6 gap-6">
-              <div class="col-span-6 sm:col-span-3">
-                <InputLabel for="name" value="Nombre"  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"/>
-                <TextInput
-                    id="name"
-                    v-model="form.name"
-                    type="text"
-                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    :class="form.errors.name ? 'dark:border-red-500 border-red-500': ''"
-                    autofocus
-                    autocomplete="name"
-                />
-                <InputError class="mt-2" :message="form.errors.name" />
-              </div>
-              <div class="col-span-6 sm:col-span-3">
-                <InputLabel for="email" value="Email"  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"/>
-                <TextInput
-                    id="email"
-                    v-model="form.email"
-                    type="email"
-                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    :class="form.errors.email ? 'dark:border-red-500 border-red-500': ''"
-                    autofocus
-                    autocomplete="name"
-                />
-                <InputError class="mt-2" :message="form.errors.email" />
-              </div>
-              <div class="col-span-6 sm:col-span-3">
-                <!-- <label
-                  for="password"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                  >Password</label
-                > -->
-                <InputLabel for="password" value="Password"  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"/>
-                <TextInput
-                    id="password"
-                    v-model="form.password"
-                    type="password"
-                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    :class="form.errors.password ? 'dark:border-red-500 border-red-500': ''"
-                    autofocus
-                    autocomplete="name"
-                />
-                <InputError class="mt-2" :message="form.errors.password" />
-              </div>
-              <div class="col-span-6 sm:col-span-3">
-                <InputLabel for="password_confirmation" value="Confirmar Password"  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"/>
-                <TextInput
-                    id="password_confirmation"
-                    v-model="form.password_confirmation"
-                    type="password"
-                    class="shadow-sm bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                    :class="form.errors.password_confirmation ? 'dark:border-red-500 border-red-500': ''"
-                    autofocus
-                    autocomplete="name"
-                />
-                <InputError class="mt-2" :message="form.errors.password_confirmation" />
-              </div>
-              <div class="col-span-6 sm:col-span-3">
-                <InputLabel
-                  for="roles"
-                  value="Roles"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                />
+              <Field label="Nombre" :error="form.errors.name">
+                <Input v-model="form.name" type="text" />
+              </Field>
+              <Field label="Email" :error="form.errors.email">
+                <Input v-model="form.email" type="text" />
+              </Field>
+              <Field label="Password" :error="form.errors.password">
+                <Input v-model="form.password" type="text" />
+              </Field>
+              <Field
+                label="Confirmar Password"
+                :error="form.errors.password_confirmation"
+              >
+                <Input v-model="form.password_confirmation" type="text" />
+              </Field>
+              <Field label="Seleccionar Roles" :error="form.errors.password_confirmation">
                 <VueMultiselect
                   v-model="form.roles"
                   :options="roles.data"
                   :multiple="true"
                   :close-on-select="true"
-                  placeholder="Elige uno"
+                  placeholder="Elige los Roles"
                   label="name"
                   track-by="id"
                 />
-              </div>
-              <div class="col-span-6 sm:col-span-3">
-                <InputLabel
-                  for="permissions"
-                  value="Permisos"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                />
+              </Field>
+              <Field
+                label="Seleccionar Permisos"
+                :error="form.errors.password_confirmation"
+              >
                 <VueMultiselect
                   v-model="form.permissions"
                   :options="permissions.data"
                   :multiple="true"
                   :close-on-select="true"
-                  placeholder="Elige uno"
+                  placeholder="Elige los Permisos"
                   label="name"
                   track-by="id"
                 />
-              </div>
+              </Field>
               <div class="col-span-6 sm:col-full">
-                <LoadingButton :loading="form.processing" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" >
-                    Guardar
+                <LoadingButton
+                  :loading="form.processing"
+                  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                >
+                  Guardar
                 </LoadingButton>
               </div>
             </div>

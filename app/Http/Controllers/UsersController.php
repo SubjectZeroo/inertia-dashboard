@@ -60,7 +60,7 @@ class UsersController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(UserRequestCreate $request)
+    public function store(UserRequestCreate $request): RedirectResponse
     {
 
         // Request::validate([
@@ -78,7 +78,7 @@ class UsersController extends Controller
         $user->syncRoles($request->input('roles.*.name'));
         $user->syncPermissions($request->input('permissions.*.name'));
 
-        return Redirect::route('users')->with('success', 'User created.');
+        return Redirect::route('users.index')->with('toast', 'Usuario Creado');
     }
 
     /**
@@ -105,7 +105,7 @@ class UsersController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UserRequestCreate $request, User $user)
+    public function update(UserRequestCreate $request, User $user): RedirectResponse
     {
 
         $user->update([
@@ -113,23 +113,22 @@ class UsersController extends Controller
             'email' => $request->email
         ]);
 
-
         $user->syncRoles($request->input('roles.*.name'));
 
         $user->syncPermissions($request->input('permissions.*.name'));
 
-        return Redirect::route('users')->with('success', 'User updated.');
+        return Redirect::route('users.index')->with('toast', 'Usuario Actualizado');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(User $user)
+    public function destroy(User $user): RedirectResponse
     {
         $user->delete();
 
         sleep(1);
 
-        return Redirect::route('users')->with('success', 'User created.');
+        return Redirect::route('users.index');
     }
 }

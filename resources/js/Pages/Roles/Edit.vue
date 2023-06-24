@@ -12,6 +12,13 @@ import DangerButton from "@/Components/DangerButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
 import { onMounted, ref, watch } from "vue";
 import VueMultiselect from "vue-multiselect";
+import Label from "@/Components/Label.vue";
+import Input from "@/Components/Input.vue";
+import Field from "@/Components/Field.vue";
+import Table from "@/Components/Table.vue";
+import TableHeaderCell from "@/Components/TableHeaderCell.vue";
+import TableDataCell from "@/Components/TableDataCell.vue";
+import TableRow from "@/Components/TableRow.vue";
 const props = defineProps({
   role: {
     type: Object,
@@ -132,7 +139,7 @@ const revokePermission = () => {
           <h3 class="mb-4 text-xl font-semibold dark:text-white">Información General</h3>
           <form @submit.prevent="submit">
             <div class="grid grid-cols-6 gap-6">
-              <div class="col-span-6 sm:col-span-3">
+              <!-- <div class="col-span-6 sm:col-span-3">
                 <InputLabel
                   for="name"
                   value="Nombre"
@@ -164,7 +171,21 @@ const revokePermission = () => {
                   label="name"
                   track-by="id"
                 />
-              </div>
+              </div> -->
+              <Field label="Nombre" :error="form.errors.name">
+                <Input v-model="form.name" type="text" />
+              </Field>
+              <Field label="Seleccionar Permisos" :error="form.errors.password_confirmation">
+                <VueMultiselect
+                  v-model="form.permissions"
+                  :options="permissions.data"
+                  :multiple="true"
+                  :close-on-select="true"
+                  placeholder="Elige uno"
+                  label="name"
+                  track-by="id"
+                />
+              </Field>
               <div class="col-span-6 sm:col-full">
                 <LoadingButton
                   :loading="form.processing"
@@ -180,7 +201,7 @@ const revokePermission = () => {
           class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800"
         >
           <h3 class="mb-4 text-xl font-semibold dark:text-white">Permisos asignados</h3>
-          <table
+          <!-- <table
             class="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-600"
           >
             <thead class="bg-gray-100 dark:bg-gray-700">
@@ -247,7 +268,42 @@ const revokePermission = () => {
                 </td>
               </tr>
             </tbody>
-          </table>
+          </table> -->
+          <Table>
+            <template #header>
+              <TableRow>
+                <TableHeaderCell>Nombre</TableHeaderCell>
+                <TableHeaderCell>Acciones</TableHeaderCell>
+              </TableRow>
+            </template>
+            <template #default>
+              <TableRow
+                v-for="rolePermission in role.data.permissions"
+                :key="rolePermission.id"
+              >
+                <TableDataCell class="flex items-center">
+                  <div class="text-base font-semibold text-gray-900 dark:text-white">
+                    {{ rolePermission.name }}
+                  </div>
+                </TableDataCell>
+                <TableDataCell>
+                  <a
+                  @click="confirmPermissionToRevoke(rolePermission)"
+                    id="revokePermissionButton"
+                    tabindex="-1"
+                    data-drawer-target="drawer-revoke-permission-default"
+                    data-drawer-show="drawer-revoke-permission-default"
+                    aria-controls="drawer-revoke-permission-default"
+                    data-drawer-placement="right"
+                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900 cursor-pointer"
+                  >
+                    <TrashIcon class="w-4 h-4 mr-2" />
+                    Eliminar
+                  </a>
+                </TableDataCell>
+              </TableRow>
+            </template>
+          </Table>
         </div>
       </div>
     </div>

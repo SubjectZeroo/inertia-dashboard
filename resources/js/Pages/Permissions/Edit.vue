@@ -5,7 +5,9 @@ import InputLabel from '@/Components/InputLabel.vue';
 import TextInput from '@/Components/TextInput.vue';
 import InputError from '@/Components/InputError.vue';
 import LoadingButton from '@/Components/LoadingButton.vue';
-
+import Label from "@/Components/Label.vue";
+import Input from "@/Components/Input.vue";
+import Field from "@/Components/Field.vue";
 const props = defineProps({
     permission: {
         type: Object,
@@ -92,7 +94,7 @@ const submit = () => {
           <h3 class="mb-4 text-xl font-semibold dark:text-white">Información General</h3>
           <form @submit.prevent="submit">
             <div class="grid grid-cols-6 gap-6">
-              <div class="col-span-6 sm:col-span-6">
+              <!-- <div class="col-span-6 sm:col-span-6">
                 <InputLabel for="name" value="Nombre"  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white"/>
                 <TextInput
                     id="name"
@@ -104,7 +106,10 @@ const submit = () => {
                     autocomplete="name"
                 />
                 <InputError class="mt-2" :message="form.errors.name" />
-              </div>
+              </div> -->
+              <Field label="Nombre" :error="form.errors.name">
+                <Input v-model="form.name" type="text" />
+              </Field>
 
               <div class="col-span-6 sm:col-full">
                 <LoadingButton :loading="form.processing" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" >

@@ -10,7 +10,18 @@ import Pagination from "@/Components/Pagination.vue";
 import DialogConfirmation from "@/Components/ConfirmationModal.vue";
 import DangerButton from "@/Components/DangerButton.vue";
 import SecondaryButton from "@/Components/SecondaryButton.vue";
-
+import Table from "@/Components/Table.vue";
+import TableHeaderCell from "@/Components/TableHeaderCell.vue";
+import TableDataCell from "@/Components/TableDataCell.vue";
+import TableRow from "@/Components/TableRow.vue";
+import {
+  TrashIcon,
+  PencilSquareIcon,
+  ChevronRightIcon,
+  HomeIcon,
+  PlusIcon,
+} from "@heroicons/vue/24/outline";
+import toast from "@/Stores/toast.js";
 const props = defineProps({
   users: Object,
   filters: Object,
@@ -47,10 +58,14 @@ const deleteUser = () => {
     preserveScroll: true,
     onSuccess: () => closeModal(),
     // onError: () => passwordInput.value.focus(),
-    // onFinish: () => form.reset(),
+    onFinish: () => addToast(),
   });
 };
-
+function addToast(params) {
+  toast.add({
+    message: "Usuario ELiminado",
+  });
+}
 const closeModal = () => {
   confirmingUserDeletion.value = false;
 };
@@ -62,7 +77,7 @@ const closeModal = () => {
       <h2 class="font-semibold text-xl text-gray-800 leading-tight">Usuarios</h2>
     </template>
     <div
-      class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200  dark:bg-gray-800 dark:border-gray-700"
+      class="p-4 bg-white block sm:flex items-center justify-between border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
     >
       <div class="w-full mb-1">
         <div class="mb-4">
@@ -75,33 +90,13 @@ const closeModal = () => {
                   href="/dashboard"
                   class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white"
                 >
-                  <svg
-                    class="w-5 h-5 mr-2.5"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"
-                    ></path>
-                  </svg>
+                  <HomeIcon class="w-5 h-5 mr-2.5" />
                   Dashboard
                 </Link>
               </li>
               <li>
                 <div class="flex items-center">
-                  <svg
-                    class="w-6 h-6 text-gray-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
+                  <ChevronRightIcon class="w-5 h-5 text-gray-400" />
                   <span
                     class="ml-1 text-gray-400 md:ml-2 dark:text-gray-500"
                     aria-current="page"
@@ -132,16 +127,7 @@ const closeModal = () => {
               aria-controls="drawer-create-product-default"
               data-drawer-placement="right"
             >
-              <svg
-                class="w-5 h-5 mr-2 -ml-1"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-              >
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
-              </svg>
+            <PlusIcon class="w-5 h-5 mr-2 -ml-1" />
               Agregar Usuario
             </Link>
           </div>
@@ -151,124 +137,61 @@ const closeModal = () => {
     <div class="flex flex-col">
       <div class="overflow-x-auto">
         <div class="inline-block min-w-full align-middle">
-          <div class="overflow-hidden shadow">
-            <table
-              class="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-600"
-            >
-              <thead class="bg-gray-100 dark:bg-gray-700">
-                <tr>
-                  <th
-                    scope="col"
-                    class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
-                  >
-                    NOMBRE
-                  </th>
-                  <!-- <th
-                    scope="col"
-                    class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
-                  >
-                    EMAIL
-                  </th> -->
-                  <!-- <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                                                ROL
-                                            </th>
-                                            <th scope="col" class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400">
-                                                STATUS
-                                            </th> -->
-                  <th
-                    scope="col"
-                    class="p-4 text-xs font-medium text-left text-gray-500 uppercase dark:text-gray-400"
-                  >
-                    ACCIONES
-                  </th>
-                </tr>
-              </thead>
-              <tbody
-                class="bg-white divide-y divide-gray-200 dark:bg-gray-800 dark:divide-gray-700"
-              >
-                <tr
-                  v-for="user in users.data"
-                  :key="user.id"
-                  class="hover:bg-gray-100 dark:hover:bg-gray-700"
-                >
-                  <td class="flex items-center p-4 mr-12 space-x-6 whitespace-nowrap">
-                    <img
-                      class="w-10 h-10 rounded-full"
-                      :src="user.profile_photo_url"
-                      :alt="user.name"
-                    />
-                    <div class="text-sm font-normal text-gray-500 dark:text-gray-400">
-                      <div class="text-base font-semibold text-gray-900 dark:text-white">
-                        {{ user.name }}
-                      </div>
-                      <div class="text-sm font-normal text-gray-500 dark:text-gray-400">
-                        {{ user.email }}
-                      </div>
+          <Table>
+            <template #header>
+              <TableRow>
+                <TableHeaderCell>Nombre</TableHeaderCell>
+                <TableHeaderCell>Acciones</TableHeaderCell>
+              </TableRow>
+            </template>
+            <template #default>
+              <TableRow v-for="user in users.data" :key="user.id">
+                <TableDataCell class="flex items-center">
+                  <img
+                    class="w-10 h-10 rounded-full"
+                    :src="user.profile_photo_url"
+                    :alt="user.name"
+                  />
+                  <div class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                    <div class="text-base font-semibold text-gray-900 dark:text-white">
+                      {{ user.name }}
                     </div>
-                  </td>
-
-                  <td class="p-4 space-x-2 whitespace-nowrap">
-                    <Link
-                      id="updateUserButton"
-                      :href="`/users/${user.id}/edit`"
-                      tabindex="-1"
-                      data-drawer-target="drawer-update-user-default"
-                      data-drawer-show="drawer-update-user-default"
-                      aria-controls="drawer-update-user-default"
-                      data-drawer-placement="right"
-                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                    >
-                      <svg
-                        class="w-4 h-4 mr-2"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"
-                        ></path>
-                        <path
-                          fill-rule="evenodd"
-                          d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"
-                          clip-rule="evenodd"
-                        ></path>
-                      </svg>
-                      Actualizar
-                    </Link>
-                    <a
-                      @click="confirmUserDeletion(user)"
-                      id="deleteUserButton"
-                      tabindex="-1"
-                      data-drawer-target="drawer-delete-user-default"
-                      data-drawer-show="drawer-delete-user-default"
-                      aria-controls="drawer-delete-user-default"
-                      data-drawer-placement="right"
-                      class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900 cursor-pointer"
-                    >
-                      <svg
-                        class="w-4 h-4 mr-2"
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          fill-rule="evenodd"
-                          d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-                          clip-rule="evenodd"
-                        ></path>
-                      </svg>
-                      Eliminar
-                    </a>
-                  </td>
-                </tr>
-                <tr v-if="users.data.length === 0">
-                  <td class="px-6 py-4 border-t dark:text-gray-400" colspan="4">
-                    No se encontraron usuarios.
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                    <div class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                      {{ user.email }}
+                    </div>
+                  </div>
+                </TableDataCell>
+                <TableDataCell>
+                  <Link
+                    id="updateUserButton"
+                    :href="`/users/${user.id}/edit`"
+                    tabindex="-1"
+                    data-drawer-target="drawer-update-user-default"
+                    data-drawer-show="drawer-update-user-default"
+                    aria-controls="drawer-update-user-default"
+                    data-drawer-placement="right"
+                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white rounded-lg bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                  >
+                    <PencilSquareIcon class="w-4 h-4 mr-2" />
+                    Actualizar
+                  </Link>
+                  <a
+                    @click="confirmUserDeletion(user)"
+                    id="deleteUserButton"
+                    tabindex="-1"
+                    data-drawer-target="drawer-delete-user-default"
+                    data-drawer-show="drawer-delete-user-default"
+                    aria-controls="drawer-delete-user-default"
+                    data-drawer-placement="right"
+                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900 cursor-pointer"
+                  >
+                    <TrashIcon class="w-4 h-4 mr-2" />
+                    Eliminar
+                  </a>
+                </TableDataCell>
+              </TableRow>
+            </template>
+          </Table>
         </div>
       </div>
     </div>
