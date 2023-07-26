@@ -9,10 +9,14 @@ export default defineConfig({
         },
       },
     server: {
-        host: '0.0.0.0',
-        hmr: {
-            host: 'maquinarium-inertia-app.test'
-        }
+       https: false,
+       host: true,
+       strictPort: true,
+       port: 3009,
+       hmr:{host: 'localhost', protocol: 'ws'},
+       watch: {
+        usePolling: true,
+       }
     },
     plugins: [
         laravel({

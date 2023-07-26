@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\Country;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -38,5 +39,15 @@ class DatabaseSeeder extends Seeder
         //     ->withPersonalTeam()
         //     ->hasAttached(Team::factory()->count(3))
         //     ->create();
+
+        $country = Country::factory()->create([
+            'name' => 'Venezuela',
+            'full_name' => 'Venezuela',
+            // 'code' => NULL,
+        ]);
+
+
+
+        $this->call(StateSeeder::class);
     }
 }

@@ -1,0 +1,28 @@
+name: inertia-dashboard
+recipe: laravel
+config:
+  webroot: ./public
+  php: '8.1'
+  xdebug: true
+  database: mysql:8.0
+services:
+  node:
+    type: node:18
+    scanner: false
+    ports:
+      - 3009:3009
+    build:
+      - npm install
+  database:
+    portforward: 3307
+    creds:
+      user: laravel
+      password: laravel
+      database: inertia_dashboard
+tooling:
+  dev:
+    service: node
+    cmd: npm run dev
+  build:
+    service: node
+    cmd: npm run build

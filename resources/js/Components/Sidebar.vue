@@ -4,16 +4,9 @@ import SidebarLink from "@/Components/SidebarLink.vue";
 import DropdownSidebar from "@/Components/DropdownSidebar.vue";
 import NavItem from "@/Components/NavItem.vue";
 import { usePermission } from "@/Composables/Permissions.js";
-import { HomeIcon, UserIcon, CogIcon, TruckIcon } from "@heroicons/vue/24/outline";
+import { HomeIcon, UserIcon, CogIcon, TruckIcon, UsersIcon, ArchiveBoxIcon } from "@heroicons/vue/24/outline";
 defineProps({
   title: String,
-  dropdownLinks: {
-    type: Array,
-    default: () => [
-      { text: "Roles", route: "roles.index" },
-      { text: "Permisos", route: "permissions.index" },
-    ],
-  },
 });
 
 const isDark = useDark();
@@ -24,9 +17,100 @@ const navItems = [
     href: route("dashboard"),
     active: route().current("dashboard"),
     roles: ["Super Admin"],
-    label: "Dasboard",
+    label: "Dashboard",
     children: [],
     icon: HomeIcon,
+  },
+  {
+    href: "#",
+    active: false,
+    roles: ["Super Admin"],
+    label: "Clientes",
+    children: [
+        {
+            href:  route("customers.index"),
+            active:  route().current("customers.index"),
+            roles: ["Super Admin"],
+            label: "Lista Clientes",
+            children: [],
+            icon: null,
+        },
+        {
+            href:  route("customer-locations.index"),
+            active:  route().current("customer-locations.index"),
+            roles: ["Super Admin"],
+            label: "Locaciones Clientes",
+            children: [],
+            icon: null,
+        },
+    ],
+    icon: UsersIcon,
+  },
+  {
+    href: "#",
+    active: false,
+    roles: ["Super Admin"],
+    label: "Vehiculos",
+    children: [
+        {
+            href: route("vehicles.index"),
+            active: route().current("vehicles.index"),
+            roles: ["Super Admin"],
+            label: "Lista Vehiculos",
+            children: [],
+            icon: null,
+        },
+        {
+            href: "#",
+            active: false,
+            roles: ["Super Admin"],
+            label: "Lista Modelos",
+            children: [],
+            icon: null,
+        },
+        {
+            href: "#",
+            active: false,
+            roles: ["Super Admin"],
+            label: "Lista Marcas",
+            children: [],
+            icon: null,
+        },
+    ],
+    icon: TruckIcon,
+  },
+  {
+    href: "#",
+    active: false,
+    roles: ["Super Admin"],
+    label: "Articulos",
+    children: [
+        {
+            href:  route("items.index"),
+            active: route().current("items.index"),
+            roles: ["Super Admin"],
+            label: "Lista Items",
+            children: [],
+            icon: null,
+        },
+        {
+            href: "#",
+            active: false,
+            roles: ["Super Admin"],
+            label: "Item Categorias",
+            children: [],
+            icon: null,
+        },
+        {
+            href: "#",
+            active: false,
+            roles: ["Super Admin"],
+            label: "Item SubCategorias",
+            children: [],
+            icon: null,
+        },
+    ],
+    icon: ArchiveBoxIcon,
   },
   {
     href: route("users.index"),
@@ -35,14 +119,6 @@ const navItems = [
     label: "Usuarios",
     children: [],
     icon: UserIcon,
-  },
-  {
-    href: route("machines.index"),
-    active: route().current("machines.index"),
-    roles: ["Super Admin"],
-    label: "Maquinarias",
-    children: [],
-    icon: TruckIcon,
   },
   {
     href: "#",

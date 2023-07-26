@@ -1,12 +1,17 @@
 <?php
 
-use App\Http\Controllers\MachineController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\CustomerLocationController;
+use App\Http\Controllers\ItemController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\RemoveRoleFromUserController;
 use App\Http\Controllers\RevokePermissionFromUserController;
 use App\Http\Controllers\RevokePermissionsFromRoleController;
 use App\Http\Controllers\RolesController;
+use App\Http\Controllers\StateController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\VehicleController;
+use App\Models\Vehicle;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -101,6 +106,9 @@ Route::middleware([
     //     ->name('permissions.destroy');
 
 
+    Route::get('get-states-by-country/{country_id?}', [StateController::class, 'getStatesByCountry']);
+
+
     Route::middleware(['auth', 'role:Super Admin'])->group(function () {
         Route::resource('/users', UsersController::class);
         Route::resource('/roles', RolesController::class);
@@ -113,5 +121,10 @@ Route::middleware([
         Route::delete('users/{user}/roles/{roles}', RemoveRoleFromUserController::class)->name('users.roles.destroy');
     });
 
-    Route::resource('/machines', MachineController::class);
+    Route::resource('/vehicles', VehicleController::class);
+    Route::resource('/customers', CustomerController::class);
+    Route::resource('/customer-locations', CustomerLocationController::class);
+    Route::resource('/items', ItemController::class);
+
+
 });
