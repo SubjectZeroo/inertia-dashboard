@@ -79,10 +79,12 @@ class CustomerLocationController extends Controller
      */
     public function edit(CustomerLocation $customerLocation): Response
     {
-        $customerLocation->load(['customer', 'state']);
 
+        $customerLocation->load(['customer', 'state']);
+        // dd($customerLocation->state);
         return Inertia::render('CustomerLocations/Edit',[
             'customerLocation' => new CustomerLocationResource($customerLocation),
+            // 'selectedState' => CustomerLocationResource::collection($customerLocation) ,
             'customers' => CustomerResource::collection(Customer::all()),
             'countries' => CountryResource::collection(Country::all()),
             'states'=> StateResource::collection(State::all()),
@@ -95,7 +97,11 @@ class CustomerLocationController extends Controller
      */
     public function update(UpdateCustomerLocationRequest $request, CustomerLocation $customerLocation): RedirectResponse
     {
-        //
+
+        // dd($request->input('roles.*.name'));
+        // dd($request->validated());
+        $customerLocation->update($request->validated());
+        return Redirect::route('customer-locations.index')->with('toast', 'Locacion de Cliente Actualizada');
     }
 
     /**

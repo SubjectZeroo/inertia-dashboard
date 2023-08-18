@@ -4,9 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreItemCategoryRequest;
 use App\Http\Requests\UpdateItemCategoryRequest;
+use App\Http\Resources\ItemCategoryResource;
 use App\Models\ItemCategory;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Request;
+use Inertia\Inertia;
+use Inertia\Response;
+
 
 class ItemCategoryController extends Controller
 {
@@ -15,7 +20,15 @@ class ItemCategoryController extends Controller
      */
     public function index(): Response
     {
-        //
+        return Inertia::render('ItemCategories/Index', [
+            'filters' => Request::all('search'),
+            'itemCategories' => ItemCategoryResource::collection(
+                ItemCategory::orderBy('name')
+                    ->filter(Request::only('search'))
+                    ->paginate(10)
+                    ->withQueryString()
+            )
+        ]);
     }
 
     /**
@@ -23,7 +36,7 @@ class ItemCategoryController extends Controller
      */
     public function create(): Response
     {
-        //
+        return Inertia::render('ItemCategories/Create');
     }
 
     /**
@@ -31,7 +44,9 @@ class ItemCategoryController extends Controller
      */
     public function store(StoreItemCategoryRequest $request): RedirectResponse
     {
-        //
+        $itemCategory = ItemCategory::create($request->validated());
+
+        return Redirect::route('item-categories.index')->with('toast', 'Categoria de Articulo Creado');
     }
 
     /**
@@ -47,7 +62,9 @@ class ItemCategoryController extends Controller
      */
     public function edit(ItemCategory $itemCategory): Response
     {
-        //
+        return Inertia::render('ItemCategories/Edit', [
+            'itemCategory' => new ItemCategoryResource($itemCategory),
+        ]);
     }
 
     /**
@@ -55,7 +72,8 @@ class ItemCategoryController extends Controller
      */
     public function update(UpdateItemCategoryRequest $request, ItemCategory $itemCategory): RedirectResponse
     {
-        //
+        $itemCategory->update($request->validated());
+        return Redirect::route('item-categories.index')->with('toast', 'Categoria de Articulo Actualizado');
     }
 
     /**
@@ -63,6 +81,10 @@ class ItemCategoryController extends Controller
      */
     public function destroy(ItemCategory $itemCategory): RedirectResponse
     {
-        //
+        $itemCategory->delete();
+
+        sleep(1);
+
+        return Redirect::route('item-categories.index');
     }
 }

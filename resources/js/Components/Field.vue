@@ -32,7 +32,7 @@ provide("field", computed(() => {
 
 <template>
   <!-- <div class="grid grid-cols-6 gap-6"> -->
-    <div class="col-span-6 sm:col-span-3">
+    <!-- <div class="col-span-6 sm:col-span-3"> -->
       <Label v-if="props.label" :for="props.id" required> {{ props.label }} </Label>
       <!-- <Input
 
@@ -44,5 +44,5 @@ provide("field", computed(() => {
       <slot v-bind="props"/>
       <InputError class="mt-2" :message="props.error" />
     <!-- </div> -->
-  </div>
+  <!-- </div> -->
 </template>

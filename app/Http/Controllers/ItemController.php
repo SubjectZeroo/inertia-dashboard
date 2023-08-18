@@ -3,16 +3,20 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreItemRequest;
+use App\Http\Requests\StoreItemSubcategoryRequest;
 use App\Http\Requests\UpdateItemRequest;
 use App\Http\Resources\ItemBrandResource;
 use App\Http\Resources\ItemCategoryResource;
 use App\Http\Resources\ItemResource;
+use App\Http\Resources\ItemSubcategoryResource;
 use App\Http\Resources\UnitResource;
 use App\Models\Item;
 use App\Models\ItemBrand;
 use App\Models\ItemCategory;
+use App\Models\ItemSubcategory;
 use App\Models\Unit;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -43,7 +47,8 @@ class ItemController extends Controller
         return Inertia::render('Items/Create', [
             'units' => UnitResource::collection(Unit::all()),
             'item_categories' => ItemCategoryResource::collection(ItemCategory::all()),
-            'item_brands' => ItemBrandResource::collection(ItemCategory::all())
+            'item_subcategories' => ItemSubcategoryResource::collection(ItemSubcategory::all()),
+            'item_brands' => ItemBrandResource::collection(ItemBrand::all())
         ]);
     }
 
@@ -52,7 +57,9 @@ class ItemController extends Controller
      */
     public function store(StoreItemRequest $request): RedirectResponse
     {
-        //
+        $item = Item::create($request->validated());
+
+        return Redirect::route('items.index')->with('toast', 'Item Creado');
     }
 
     /**
@@ -68,7 +75,15 @@ class ItemController extends Controller
      */
     public function edit(Item $item): Response
     {
-        return Inertia::render('Items/Edit');
+        $item->load(['unit', 'item_category', 'item_brand']);
+
+        return Inertia::render('Items/Edit', [
+            'item' => new ItemResource($item),
+            'units' => UnitResource::collection(Unit::all()),
+            'item_categories' => ItemCategoryResource::collection(ItemCategory::all()),
+            'item_subcategories' => ItemSubcategoryResource::collection(ItemSubcategory::all()),
+            'item_brands' => ItemBrandResource::collection(ItemBrand::all())
+        ]);
     }
 
     /**
@@ -76,7 +91,9 @@ class ItemController extends Controller
      */
     public function update(UpdateItemRequest $request, Item $item): RedirectResponse
     {
-        //
+        $item->update($request->validated());
+
+        return Redirect::route('items.index')->with('toast', 'Item Actualizado');
     }
 
     /**
@@ -84,6 +101,10 @@ class ItemController extends Controller
      */
     public function destroy(Item $item): RedirectResponse
     {
-        //
+        $item->delete();
+
+        sleep(1);
+
+        return Redirect::route('items.index');
     }
 }

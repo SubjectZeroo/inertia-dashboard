@@ -21,9 +21,8 @@ class VehicleResource extends JsonResource
             'unit' => $this->unit,
             'serial' => $this->serial,
             'price' => $this->price,
-            'customers' => CustomerResource::collection($this->whenLoaded('customers')),
-            'vehicle_brands' => VehicleBrand::collection($this->whenLoaded('vehicle_brands')),
-            'vehicle_models' => VehicleModel::collection($this->whenLoaded('vehicle_models')),
+            'customer' => new CustomerResource($this->customer),
+            'vehicle_model' => new VehicleModelResource($this->vehicle_model)
         ];
     }
 }

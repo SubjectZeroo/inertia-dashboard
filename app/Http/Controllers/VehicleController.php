@@ -13,6 +13,7 @@ use App\Models\Vehicle;
 use App\Models\VehicleBrand;
 use App\Models\VehicleModel;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
 use Inertia\Inertia;
 use Inertia\Response;
@@ -27,7 +28,7 @@ class VehicleController extends Controller
         return Inertia::render('Vehicles/Index', [
             'filters' => Request::all('search'),
             'vehicles' => VehicleResource::collection(
-                Vehicle::orderBy('name')
+                Vehicle::orderBy('unit')
                     ->filter(Request::only('search'))
                     ->paginate(10)
                     ->withQueryString()
@@ -53,7 +54,9 @@ class VehicleController extends Controller
      */
     public function store(StoreVehicleRequest $request): RedirectResponse
     {
-        //
+        $vehicle = Vehicle::create($request->validated());
+
+        return Redirect::route('vehicles.index')->with('toast', 'Vehiculo Creado');
     }
 
     /**
@@ -69,7 +72,14 @@ class VehicleController extends Controller
      */
     public function edit(Vehicle $vehicle): Response
     {
-        return Inertia::render('Vehicles/Edit');
+        $vehicle->load(['customer', 'vehicle_model']);
+
+        return Inertia::render('Vehicles/Edit', [
+            'vehicle' => new VehicleResource($vehicle),
+            'customers' => CustomerResource::collection(Customer::all()),
+            'vehicle_brands' => VehicleBrandResource::collection(VehicleBrand::all()),
+            'vehicle_models' => VehicleModelResource::collection(VehicleModel::all()),
+        ]);
     }
 
     /**
@@ -77,7 +87,8 @@ class VehicleController extends Controller
      */
     public function update(UpdateVehicleRequest $request, Vehicle $vehicle): RedirectResponse
     {
-        //
+        $vehicle->update($request->validated());
+        return Redirect::route('vehicles.index')->with('toast', 'Vehiculo Actualizado');
     }
 
     /**
@@ -85,6 +96,10 @@ class VehicleController extends Controller
      */
     public function destroy(Vehicle $vehicle): RedirectResponse
     {
-        //
+        $vehicle->delete();
+
+        sleep(1);
+
+        return Redirect::route('vehicles.index');
     }
 }

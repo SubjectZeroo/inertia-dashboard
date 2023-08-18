@@ -24,10 +24,7 @@ class CustomerLocationResource extends JsonResource
             'address' => $this->address,
             'ubication' => $this->ubication,
             'customer' => new CustomerResource($this->customer),
-            'state' => new StateResource($this->state),
-            // 'customer' => CustomerResource::collection($this->whenLoaded('customers')),
-            // 'countries' => CountryResource::collection($this->whenLoaded('countries')),
-            // 'state' => StateResource::collection($this->whenLoaded('states')),
+            'state' => new StateResource($this->state)
         ];
     }
 }

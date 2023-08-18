@@ -47,7 +47,12 @@ class DatabaseSeeder extends Seeder
         ]);
 
 
-
+        $this->call(CustomerTypeSeeder::class);
         $this->call(StateSeeder::class);
+        $this->call(VehicleTypeSeeder::class);
+        $this->call(VehicleBrandSeeder::class);
+        $this->call(VehicleModelSeeder::class);
+        $this->call(ItemCategorySeeder::class);
+
     }
 }

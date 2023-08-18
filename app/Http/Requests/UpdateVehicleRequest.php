@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateVehicleRequest extends FormRequest
 {
@@ -22,7 +23,11 @@ class UpdateVehicleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'customer_id' => ['required','exists:customers,id'],
+            'vehicle_model_id' => ['required','exists:vehicle_models,id'],
+            'unit' => ['string', 'required', Rule::unique('vehicles', 'unit')->ignore($this->vehicle)],
+            'serial' => ['string', 'required', Rule::unique('vehicles', 'serial')->ignore($this->vehicle)],
+            'price' => ['numeric', 'required'],
         ];
     }
 }

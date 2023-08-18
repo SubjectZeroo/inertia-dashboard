@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\CustomerLocationController;
+use App\Http\Controllers\ItemBrandController;
+use App\Http\Controllers\ItemCategoryController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ItemSubcategoryController;
 use App\Http\Controllers\PermissionsController;
 use App\Http\Controllers\RemoveRoleFromUserController;
 use App\Http\Controllers\RevokePermissionFromUserController;
@@ -10,7 +13,9 @@ use App\Http\Controllers\RevokePermissionsFromRoleController;
 use App\Http\Controllers\RolesController;
 use App\Http\Controllers\StateController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\VehicleBrandController;
 use App\Http\Controllers\VehicleController;
+use App\Http\Controllers\VehicleModelController;
 use App\Models\Vehicle;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -107,7 +112,8 @@ Route::middleware([
 
 
     Route::get('get-states-by-country/{country_id?}', [StateController::class, 'getStatesByCountry']);
-
+    Route::get('get-vehicle-models-by-vehicle-brand/{vehicle_brand_id?}', [VehicleModelController::class, 'getModelsByBrand']);
+    Route::get('get-items-subcategories-by-item-categories/{item_category_id?}', [ItemSubcategoryController::class, 'getSubcategoryByCategory']);
 
     Route::middleware(['auth', 'role:Super Admin'])->group(function () {
         Route::resource('/users', UsersController::class);
@@ -126,5 +132,10 @@ Route::middleware([
     Route::resource('/customer-locations', CustomerLocationController::class);
     Route::resource('/items', ItemController::class);
 
+    Route::resource('/item-categories', ItemCategoryController::class);
+    Route::resource('/item-subcategories', ItemSubcategoryController::class);
+    Route::resource('/item-brands', ItemBrandController::class);
 
+    Route::resource('/vehicle-brands', VehicleBrandController::class);
+    Route::resource('/vehicle-models', VehicleModelController::class);
 });

@@ -10,7 +10,7 @@ class CustomerLocation extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_id', 'state_id', 'name','phone', 'address', 'ubication'
+        'customer_id', 'state_id', 'name', 'phone', 'address', 'ubication'
     ];
 
     public function scopeFilter($query, array $filters)

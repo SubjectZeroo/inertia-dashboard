@@ -45,6 +45,14 @@ function reset() {
   formSearch.value = mapValues(formSearch.value, () => null);
 }
 
+const confirmingItemDeletion = ref(false);
+const itemADelete = ref("");
+const form = useForm({});
+const confirmItemDeletion = (item) => {
+  confirmingItemDeletion.value = true;
+  itemADelete.value = item.id;
+};
+
 const deleteItem = () => {
   form.delete(route("items.destroy", itemADelete.value), {
     preserveScroll: true,
@@ -53,7 +61,11 @@ const deleteItem = () => {
     onFinish: () => addToast(),
   });
 };
-
+function addToast(params) {
+  toast.add({
+    message: "Item Eliminado",
+  });
+}
 const closeModal = () => {
   confirmingItemDeletion.value = false;
 };
@@ -141,7 +153,7 @@ const closeModal = () => {
                 <TableDataCell>
                   <Link
                     id="updateItemButton"
-                    :href="`/items/${items.id}/edit`"
+                    :href="`/items/${item.id}/edit`"
                     tabindex="-1"
                     data-drawer-target="drawer-update-item-default"
                     data-drawer-show="drawer-update-item-default"

@@ -20,6 +20,9 @@ services:
       password: laravel
       database: inertia_dashboard
 tooling:
+  install:
+    service: node
+    cmd: npm install
   dev:
     service: node
     cmd: npm run dev

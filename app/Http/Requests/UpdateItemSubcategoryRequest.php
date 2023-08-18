@@ -22,7 +22,8 @@ class UpdateItemSubcategoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'item_category_id' => ['required','exists:item_categories,id'],
+            'name' => ['string', 'max:255', 'required'],
         ];
     }
 }

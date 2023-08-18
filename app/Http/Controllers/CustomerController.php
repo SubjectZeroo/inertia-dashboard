@@ -4,8 +4,11 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCustomerRequest;
 use App\Http\Requests\UpdateCustomerRequest;
+use App\Http\Resources\CustomerLocationResource;
 use App\Http\Resources\CustomerResource;
+use App\Http\Resources\CustomerTypeResource;
 use App\Models\Customer;
+use App\Models\CustomerType;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Request;
@@ -35,7 +38,9 @@ class CustomerController extends Controller
      */
     public function create(): Response
     {
-        return Inertia::render('Customers/Create');
+        return Inertia::render('Customers/Create',[
+            'customer_types' => CustomerTypeResource::collection(CustomerType::all()),
+        ]);
     }
 
     /**
@@ -43,10 +48,12 @@ class CustomerController extends Controller
      */
     public function store(StoreCustomerRequest $request): RedirectResponse
     {
+
         $customer = Customer::create([
             'name' => $request->name,
             'identification' => $request->identification,
-            'email' => $request->email
+            'email' => $request->email,
+            'customer_type_id' => $request->customer_type_id
         ]);
 
         return Redirect::route('customers.index')->with('toast', 'Cliente Creado');
@@ -65,7 +72,11 @@ class CustomerController extends Controller
      */
     public function edit(Customer $customer): Response
     {
-        return Inertia::render('Customers/Edit');
+        $customer->load(['customer_type']);
+        return Inertia::render('Customers/Edit', [
+            'customer' => new CustomerResource($customer),
+            'customer_types' => CustomerTypeResource::collection(CustomerType::all()),
+        ]);
     }
 
     /**
@@ -73,7 +84,8 @@ class CustomerController extends Controller
      */
     public function update(UpdateCustomerRequest $request, Customer $customer): RedirectResponse
     {
-        //
+        $customer->update($request->validated());
+        return Redirect::route('customers.index')->with('toast', 'Cliente Actualizado');
     }
 
     /**
@@ -81,6 +93,10 @@ class CustomerController extends Controller
      */
     public function destroy(Customer $customer): RedirectResponse
     {
-        //
+        $customer->delete();
+
+        sleep(1);
+
+        return Redirect::route('customer.index');
     }
 }

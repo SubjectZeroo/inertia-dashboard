@@ -10,7 +10,7 @@ class Customer extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'identification', 'email',
+        'name', 'identification', 'email', 'customer_type_id'
     ];
 
     public function scopeFilter($query, array $filters)
@@ -27,5 +27,9 @@ class Customer extends Model
     public function clientLocations()
     {
         return $this->hasMany(clientLocations::class);
+    }
+    public function customer_type()
+    {
+        return $this->belongsTo(CustomerType::class);
     }
 }

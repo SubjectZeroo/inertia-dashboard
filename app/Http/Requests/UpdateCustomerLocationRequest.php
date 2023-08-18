@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateCustomerLocationRequest extends FormRequest
 {
@@ -11,7 +12,7 @@ class UpdateCustomerLocationRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +23,12 @@ class UpdateCustomerLocationRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'customer_id' => ['required','exists:customers,id'],
+            'state_id' => ['required','exists:states,id'],
+            'name' => ['string', 'required'],
+            'phone' => ['numeric', 'required' ],
+            'address' => ['string', 'required'],
+            'ubication' => ['string', 'required'],
         ];
     }
 }

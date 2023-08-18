@@ -1,22 +1,40 @@
 <script setup>
-import { reactive, computed, ref } from "vue";
+import { reactive, computed, ref, watch } from "vue";
 import { Head, Link, router } from "@inertiajs/vue3";
 import ApplicationMark from "@/Components/ApplicationMark.vue";
-
 import Dropdown from "@/Components/Dropdown.vue";
 import DropdownLink from "@/Components/DropdownLink.vue";
 import { usePermission } from "@/Composables/Permissions.js";
-import { useDark, useToggle } from "@vueuse/core";
+import { useDark, useToggle, onClickOutside } from "@vueuse/core";
+import useEventsBus from '@/Composables/eventBus.js';
 
+const { hasRoles } = usePermission();
+const {emit}=useEventsBus()
+const { bus } = useEventsBus();
 const isDark = useDark();
 const toggleDark = useToggle(isDark);
 
-const { hasRoles } = usePermission();
-defineProps({
-  title: String,
+const isHamburgerMenuOpen = ref(false);
+// function toggleHamburgerMenu() {
+
+//         isHamburgerMenuOpen.value = !isHamburgerMenuOpen.value;
+
+//     emit('sidebarCollapsed', isHamburgerMenuOpen.value)
+// }
+
+const onToggleClick = () => {
+    //   unsetMobileItem()
+    //   updateIsCollapsed(!isCollapsed.value)
+    //   context.emit('update:collapsed', isCollapsed.value)
+    isHamburgerMenuOpen.value = !isHamburgerMenuOpen.value;
+    emit('sidebarCollapsed', isHamburgerMenuOpen.value)
+    }
+
+watch(()=> bus.value.get('close'), (val) => {
+    const [sidebarCollapsedBus] = val ?? []
+    isHamburgerMenuOpen.value = sidebarCollapsedBus
 });
 
-const showingNavigationDropdown = ref(false);
 
 const switchToTeam = (team) => {
   router.put(
@@ -33,11 +51,22 @@ const switchToTeam = (team) => {
 const logout = () => {
   router.post(route("logout"));
 };
+
+
+// const target = ref(null);
+// const targetNav = ref(null);
+// onClickOutside(targetNav, (event) =>  {
+//     console.log(event)
+//     // isHamburgerMenuOpen.value = event.isTrusted;
+//     // { ignore: [targetNav] }
+
+//     // emit('close', isHamburgerMenuOpen.value);
+// });
 </script>
 <template>
   <nav
-    class="fixed z-30 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700"
-  >
+  ref="targetNav"
+    class="fixed top-0 z-50 w-full bg-white border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700">
     <div class="px-3 py-3 lg:px-5 lg:pl-3">
       <div class="flex items-center justify-between">
         <div class="flex items-center justify-start">
@@ -45,9 +74,11 @@ const logout = () => {
             id="toggleSidebarMobile"
             aria-expanded="true"
             aria-controls="sidebar"
-            class="p-2 text-gray-600 rounded cursor-pointer lg:hidden hover:text-gray-900 hover:bg-gray-100 focus:bg-gray-100 dark:focus:bg-gray-700 focus:ring-2 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-          >
+            @click="onToggleClick()"
+            class="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
             <svg
+
+             v-if="isHamburgerMenuOpen"
               id="toggleSidebarMobileHamburger"
               class="w-6 h-6"
               fill="currentColor"
@@ -61,8 +92,10 @@ const logout = () => {
               ></path>
             </svg>
             <svg
+
+                v-else
               id="toggleSidebarMobileClose"
-              class="hidden w-6 h-6"
+              class=" w-6 h-6"
               fill="currentColor"
               viewBox="0 0 20 20"
               xmlns="http://www.w3.org/2000/svg"

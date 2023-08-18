@@ -4,8 +4,6 @@ import AppLayout from "@/Layouts/AppLayout.vue";
 import InputLabel from "@/Components/InputLabel.vue";
 import TextInput from "@/Components/TextInput.vue";
 import InputError from "@/Components/InputError.vue";
-
-
 import LoadingButton from "@/Components/LoadingButton.vue";
 import DialogConfirmation from "@/Components/ConfirmationModal.vue";
 import DangerButton from "@/Components/DangerButton.vue";
@@ -19,21 +17,26 @@ import Table from "@/Components/Table.vue";
 import TableHeaderCell from "@/Components/TableHeaderCell.vue";
 import TableDataCell from "@/Components/TableDataCell.vue";
 import TableRow from "@/Components/TableRow.vue";
+import {
+    TableCellsIcon,
+    ChevronRightIcon,
+
+} from "@heroicons/vue/24/outline";
 const props = defineProps({
-  role: {
-    type: Object,
-    required: true,
-  },
-  permissions: Array,
+    role: {
+        type: Object,
+        required: true,
+    },
+    permissions: Array,
 });
 const form = useForm({
-  _method: "PUT",
-  name: props.role.data.name,
-  permissions: [],
+    _method: "PUT",
+    name: props.role.data.name,
+    permissions: [],
 });
 
 const submit = () => {
-  form.post(route("roles.update", props.role.data.id));
+    form.post(route("roles.update", props.role.data.id));
 };
 
 onMounted(() => {
@@ -58,12 +61,12 @@ const confirmPermissionToRevoke = (rolePermission) => {
 };
 
 const revokePermission = () => {
-  form.delete(route("roles.permissions.destroy", [props.role.data.id ,permissionARevoke.value]), {
-    preserveScroll: true,
-    onSuccess: () => closeModal(),
-    // onError: () => passwordInput.value.focus(),
-    // onFinish: () => form.reset(),
-  });
+    form.delete(route("roles.permissions.destroy", [props.role.data.id, permissionARevoke.value]), {
+        preserveScroll: true,
+        onSuccess: () => closeModal(),
+        // onError: () => passwordInput.value.focus(),
+        // onFinish: () => form.reset(),
+    });
 };
 
 
@@ -72,74 +75,44 @@ const revokePermission = () => {
 </script>
 
 <template>
-  <AppLayout :title="form.name">
-    <template #header>
-      <h2 class="font-semibold text-xl text-gray-800 leading-tight">Ajustes de rol</h2>
-    </template>
+    <AppLayout :title="form.name">
+        <template #header>
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">Ajustes de rol</h2>
+        </template>
 
-    <div class="grid grid-cols-1 px-4 pt-6  xl:gap-4 dark:bg-gray-900">
-      <div class="mb-4 col-span-full xl:mb-2">
-        <nav class="flex mb-5" aria-label="Breadcrumb">
-          <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
-            <li class="inline-flex items-center">
-              <Link
-                href="/roles"
-                class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white"
-              >
-                <svg
-                  class="w-5 h-5 mr-2.5"
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke-width="1.5"
-                  stroke="currentColor"
-                >
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0112 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 1.5v-1.5m0 0c0-.621.504-1.125 1.125-1.125m0 0h7.5"
-                  />
-                </svg>
+        <div class="grid grid-cols-1 px-4 pt-6  xl:gap-4 dark:bg-gray-900">
+            <div class="mb-4 col-span-full xl:mb-2">
+                <nav class="flex mb-5" aria-label="Breadcrumb">
+                    <ol class="inline-flex items-center space-x-1 text-sm font-medium md:space-x-2">
+                        <li class="inline-flex items-center">
+                            <Link href="/roles"
+                                class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">
+                            <TableCellsIcon class="w-5 h-5 text-gray-400 mr-2.5" />
 
-                Roles
-              </Link>
-            </li>
+                            Roles
+                            </Link>
+                        </li>
 
-            <li>
-              <div class="flex items-center">
-                <svg
-                  class="w-6 h-6 text-gray-400"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
-                <span
-                  class="ml-1 text-gray-400 md:ml-2 dark:text-gray-500"
-                  aria-current="page"
-                  >Editar</span
-                >
-              </div>
-            </li>
-          </ol>
-        </nav>
-        <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">
-          Ajustes de rol
-        </h1>
-      </div>
-      <div class="col-span-3">
-        <div
-          class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800"
-        >
-          <h3 class="mb-4 text-xl font-semibold dark:text-white">Información General</h3>
-          <form @submit.prevent="submit">
-            <div class="grid grid-cols-6 gap-6">
-              <!-- <div class="col-span-6 sm:col-span-3">
+                        <li>
+                            <div class="flex items-center">
+                                <ChevronRightIcon class="w-5 h-5 text-gray-400" />
+                                <span class="ml-1 text-gray-400 md:ml-2 dark:text-gray-500" aria-current="page">Editar
+                                    Rol</span>
+                            </div>
+                        </li>
+                    </ol>
+                </nav>
+                <h1 class="text-xl font-semibold text-gray-900 sm:text-2xl dark:text-white">
+                    Ajustes de Rol
+                </h1>
+            </div>
+            <div class="col-span-3">
+                <div
+                    class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+                    <h3 class="mb-4 text-xl font-semibold dark:text-white">Información General</h3>
+                    <form @submit.prevent="submit">
+                        <div class="grid grid-cols-6 gap-6">
+                            <!-- <div class="col-span-6 sm:col-span-3">
                 <InputLabel
                   for="name"
                   value="Nombre"
@@ -172,36 +145,30 @@ const revokePermission = () => {
                   track-by="id"
                 />
               </div> -->
-              <Field label="Nombre" :error="form.errors.name">
-                <Input v-model="form.name" type="text" />
-              </Field>
-              <Field label="Seleccionar Permisos" :error="form.errors.password_confirmation">
-                <VueMultiselect
-                  v-model="form.permissions"
-                  :options="permissions.data"
-                  :multiple="true"
-                  :close-on-select="true"
-                  placeholder="Elige uno"
-                  label="name"
-                  track-by="id"
-                />
-              </Field>
-              <div class="col-span-6 sm:col-full">
-                <LoadingButton
-                  :loading="form.processing"
-                  class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-                >
-                  Guardar
-                </LoadingButton>
-              </div>
-            </div>
-          </form>
-        </div>
-        <div
-          class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800"
-        >
-          <h3 class="mb-4 text-xl font-semibold dark:text-white">Permisos asignados</h3>
-          <!-- <table
+                            <div class="col-span-6 sm:col-span-3">
+                                <Field label="Nombre" :error="form.errors.name">
+                                    <Input v-model="form.name" type="text" />
+                                </Field>
+                            </div>
+                            <div class="col-span-6 sm:col-span-3">
+                                <Field label="Seleccionar Permisos" :error="form.errors.password_confirmation">
+                                    <VueMultiselect v-model="form.permissions" :options="permissions.data" :multiple="true"
+                                        :close-on-select="true" placeholder="Elige uno" label="name" track-by="id" />
+                                </Field>
+                            </div>
+                            <div class="col-span-6 sm:col-full">
+                                <LoadingButton :loading="form.processing"
+                                    class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    Guardar
+                                </LoadingButton>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div
+                    class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+                    <h3 class="mb-4 text-xl font-semibold dark:text-white">Permisos asignados</h3>
+                    <!-- <table
             class="min-w-full divide-y divide-gray-200 table-fixed dark:divide-gray-600"
           >
             <thead class="bg-gray-100 dark:bg-gray-700">
@@ -269,65 +236,54 @@ const revokePermission = () => {
               </tr>
             </tbody>
           </table> -->
-          <Table>
-            <template #header>
-              <TableRow>
-                <TableHeaderCell>Nombre</TableHeaderCell>
-                <TableHeaderCell>Acciones</TableHeaderCell>
-              </TableRow>
-            </template>
-            <template #default>
-              <TableRow
-                v-for="rolePermission in role.data.permissions"
-                :key="rolePermission.id"
-              >
-                <TableDataCell class="flex items-center">
-                  <div class="text-base font-semibold text-gray-900 dark:text-white">
-                    {{ rolePermission.name }}
-                  </div>
-                </TableDataCell>
-                <TableDataCell>
-                  <a
-                  @click="confirmPermissionToRevoke(rolePermission)"
-                    id="revokePermissionButton"
-                    tabindex="-1"
-                    data-drawer-target="drawer-revoke-permission-default"
-                    data-drawer-show="drawer-revoke-permission-default"
-                    aria-controls="drawer-revoke-permission-default"
-                    data-drawer-placement="right"
-                    class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900 cursor-pointer"
-                  >
-                    <TrashIcon class="w-4 h-4 mr-2" />
-                    Eliminar
-                  </a>
-                </TableDataCell>
-              </TableRow>
-            </template>
-          </Table>
+                    <Table>
+                        <template #header>
+                            <TableRow>
+                                <TableHeaderCell>Nombre</TableHeaderCell>
+                                <TableHeaderCell>Acciones</TableHeaderCell>
+                            </TableRow>
+                        </template>
+                        <template #default>
+                            <TableRow v-for="rolePermission in role.data.permissions" :key="rolePermission.id">
+                                <TableDataCell class="flex items-center">
+                                    <div class="text-base font-semibold text-gray-900 dark:text-white">
+                                        {{ rolePermission.name }}
+                                    </div>
+                                </TableDataCell>
+                                <TableDataCell>
+                                    <a @click="confirmPermissionToRevoke(rolePermission)" id="revokePermissionButton"
+                                        tabindex="-1" data-drawer-target="drawer-revoke-permission-default"
+                                        data-drawer-show="drawer-revoke-permission-default"
+                                        aria-controls="drawer-revoke-permission-default" data-drawer-placement="right"
+                                        class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-700 rounded-lg hover:bg-red-800 focus:ring-4 focus:ring-red-300 dark:focus:ring-red-900 cursor-pointer">
+                                        <TrashIcon class="w-4 h-4 mr-2" />
+                                        Eliminar
+                                    </a>
+                                </TableDataCell>
+                            </TableRow>
+                        </template>
+                    </Table>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-    <!-- Delete Permission Confirmation Modal -->
-    <DialogConfirmation :show="confirmingPermissionToRevoke" @close="closeModal">
-        <template #title> Revocar Permiso </template>
+        <!-- Delete Permission Confirmation Modal -->
+        <DialogConfirmation :show="confirmingPermissionToRevoke" @close="closeModal">
+            <template #title> Revocar Permiso </template>
 
-        <template #content>
-            ¿Estás seguro de que quieres revocar este permiso? Una vez se revoque el permiso, no se mostraran los elementos asociados al mismo.
-        </template>
+            <template #content>
+                ¿Estás seguro de que quieres revocar este permiso? Una vez se revoque el permiso, no se mostraran los
+                elementos asociados al mismo.
+            </template>
 
-        <template #footer>
-            <SecondaryButton @click="closeModal"> Cancelar </SecondaryButton>
+            <template #footer>
+                <SecondaryButton @click="closeModal"> Cancelar </SecondaryButton>
 
-            <DangerButton
-            class="ml-3"
-            :class="{ 'opacity-25': form.processing }"
-            :disabled="form.processing"
-            @click="revokePermission()"
-            >
-            Eliminar Permiso
-            </DangerButton>
-        </template>
-     </DialogConfirmation>
-  </AppLayout>
+                <DangerButton class="ml-3" :class="{ 'opacity-25': form.processing }" :disabled="form.processing"
+                    @click="revokePermission()">
+                    Eliminar Permiso
+                </DangerButton>
+            </template>
+        </DialogConfirmation>
+    </AppLayout>
 </template>
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>

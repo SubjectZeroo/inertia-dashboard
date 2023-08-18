@@ -25,9 +25,8 @@ class StoreVehicleRequest extends FormRequest
         return [
             'customer_id' => ['required','exists:customers,id'],
             'vehicle_model_id' => ['required','exists:vehicle_models,id'],
-            'vehicle_brand_id' => ['required','exists:vehicle_brands,id'],
-            'unit' => ['string', 'required'],
-            'serial' => ['string', 'required'],
+            'unit' => ['string', 'required', Rule::unique('vehicles', 'unit')->ignore($this->vehicle)],
+            'serial' => ['string', 'required', Rule::unique('vehicles', 'serial')->ignore($this->vehicle)],
             'price' => ['numeric', 'required'],
         ];
     }

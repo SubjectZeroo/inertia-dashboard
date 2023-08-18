@@ -1,15 +1,20 @@
 <script setup>
-import { ref, watch, onMounted } from "vue";
+import { ref, watch, onMounted, reactive } from "vue";
 import { Link, Head, useForm } from "@inertiajs/vue3";
 import AppLayout from "@/Layouts/AppLayout.vue";
-import InputLabel from '@/Components/InputLabel.vue';
-import TextInput from '@/Components/TextInput.vue';
-import InputError from '@/Components/InputError.vue';
-import LoadingButton from '@/Components/LoadingButton.vue';
+import InputLabel from "@/Components/InputLabel.vue";
+import TextInput from "@/Components/TextInput.vue";
+import InputError from "@/Components/InputError.vue";
+import LoadingButton from "@/Components/LoadingButton.vue";
 import Label from "@/Components/Label.vue";
 import Input from "@/Components/Input.vue";
 import Field from "@/Components/Field.vue";
 import VueMultiselect from "vue-multiselect";
+import {
+    TableCellsIcon,
+    ChevronRightIcon,
+
+} from "@heroicons/vue/24/outline";
 const props = defineProps({
     customerLocation: {
         type: Object,
@@ -28,46 +33,82 @@ const props = defineProps({
         required: true,
     },
 });
+// const data = reactive({
+//     selectedCustomer: {
+//         id: props.customerLocation.data.customer.id,
+//         name: props.customerLocation.data.customer.id,
+//     },
+// });
+
+// const loading = ref(false);
+
+// const getCustomerSelect = (value) => {
+//     loading.value = true;
+//     data.selectedCustomer = value;
+//     loading.value = false;
+//     console.log(data.selectedCustomer);
+// };
+// const selectedCustomer= ref(null)
+// const selectedId = ref(null)
+
+// const updateCustomer = (selectedCustomer) => {
+//     let selectId = null;
+
+//     console.log(selectedCustomer);
+// }
+
 const form = useForm({
-    _method: "PUT",
+    // _method: "PUT",
     customer_id: null,
     country_id: null,
-    state_id:   null,
+    state_id: null,
     name: props.customerLocation.data.name,
     phone: props.customerLocation.data.phone,
     address: props.customerLocation.data.address,
     ubication: props.customerLocation.data.ubication,
+
 });
 
 const submit = () => {
-    form.post(route("customer-locations.update", props.customerLocation.id));
+    form
+        .transform((data) => ({
+            ...data,
+            customer_id: data.customer_id.id,
+            state_id: data.state_id.id
+        }))
+        .put(
+            route("customer-locations.update", props.customerLocation.data.id)
+        );
 };
 
 const states = ref([]);
+
 const getEstados = async () => {
-     await axios
-        .get('/get-states-by-country', {
+    await axios
+        .get("/get-states-by-country", {
             params: {
-                country_id: form.country_id
-            }
+                country_id: form.country_id,
+            },
         })
         .then((response) => {
             states.value = response.data;
-            console.log(response.data);
         })
         .catch((error) => {
             console.log(error);
         });
 };
+
 onMounted(() => {
-    form.customer_id = props.customerLocation.data.customer.id;
+    form.customer_id = props.customerLocation?.data.customer;
+    form.country_id = props.customerLocation?.data.state.country;
+    form.state_id = props.customerLocation?.data.state;
 });
 watch(
     getEstados,
     () => props.customerLocation,
-    // () => form.customer_id = props.customerLocation.data.customer.id,
-    // () => (form.country_id = props.customerLocation?.data.state.country.id),
-    // () => (form.state_id = props.customerLocation?.data.state.id)
+    () => (form.customer_id = props.customerLocation?.data.customer),
+    () => (form.country_id = props.customerLocation?.data.state.country),
+    () => (form.state_id = props.customerLocation?.data.state)
 );
 </script>
 
@@ -86,26 +127,16 @@ watch(
                         <li class="inline-flex items-center">
                             <Link href="/customer-locations"
                                 class="inline-flex items-center text-gray-700 hover:text-primary-600 dark:text-gray-300 dark:hover:text-white">
-                            <svg class="w-5 h-5 mr-2.5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 01-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0112 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 1.5v-1.5m0 0c0-.621.504-1.125 1.125-1.125m0 0h7.5" />
-                            </svg>
-
-                            Locacion del Cliente
+                            <TableCellsIcon class="w-5 h-5 text-gray-400 mr-2.5" />
+                            Locaciones de Cliente
                             </Link>
                         </li>
 
                         <li>
                             <div class="flex items-center">
-                                <svg class="w-6 h-6 text-gray-400" fill="currentColor" viewBox="0 0 20 20"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                                        clip-rule="evenodd"></path>
-                                </svg>
+                                <ChevronRightIcon class="w-5 h-5 text-gray-400" />
                                 <span class="ml-1 text-gray-400 md:ml-2 dark:text-gray-500"
-                                    aria-current="page">Editar</span>
+                                    aria-current="page">Editar Locacion de Cliente</span>
                             </div>
                         </li>
                     </ol>
@@ -117,53 +148,52 @@ watch(
             <div class="col-span-2">
                 <div
                     class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
-                    <h3 class="mb-4 text-xl font-semibold dark:text-white">Información General</h3>
+                    <h3 class="mb-4 text-xl font-semibold dark:text-white">
+                        Información General
+                    </h3>
                     <form @submit.prevent="submit">
                         <div class="grid grid-cols-6 gap-6">
-                            <Field label="Seleccionar Cliente" :error="form.errors.customer_id">
-                                <VueMultiselect
-                                    v-model="form.customer_id"
-                                    :options="customers.data.map(customer => customer.id)"
-                                    :custom-label="opt => customers.data.find(x => x.id == opt).name"
-                                    :searchable="false"
-                                    :close-on-select="false"
-                                    :show-labels="false"
-                                    placeholder="Elige un Cliente"
-                                    label="name"
-                                    track-by="id"
-                                    :selected="form.customer_id"
-                                    />
-                            </Field>
-                            <Field label="Seleccionar Pais" :error="form.errors.country_id">
-                                <VueMultiselect v-model="form.country_id" :options="countries.data.map(state => state.id)"
-                                    :custom-label="opt => countries.data.find(x => x.id == opt).name"
-                                    :value="countries.data.map(state => state.id)" :close-on-select="true"
-                                    placeholder="Elige un Pais" label="name" track-by="id" />
-                            </Field>
-                            <Field label="Seleccionar Estado" :error="form.errors.state_id">
-                                    <VueMultiselect
-                                    v-model="form.state_id"
-                                    :options="states.map((state) => state.id)"
-                                    :custom-label="opt => states.find(x => x.id == opt).name"
-                                    :close-on-select="true"
-                                    placeholder="Elige un Estado"
-                                    label="name"
-                                    track-by="id"
-                                    :disabled="!form.country_id"
-                                    />
-                            </Field>
-                            <Field label="Nombre" :error="form.errors.name">
-                                <Input v-model="form.name" type="text" />
-                            </Field>
-                            <Field label="Telefono" :error="form.errors.phone">
-                                <Input v-model="form.phone" type="text" />
-                            </Field>
-                            <Field label="Telefono" :error="form.errors.address">
-                                <Input v-model="form.address" type="text" />
-                            </Field>
-                            <Field label="Telefono" :error="form.errors.ubication">
-                                <Input v-model="form.ubication" type="text" />
-                            </Field>
+                            <div class="col-span-6 sm:col-span-3">
+                                <Field label="Seleccionar Cliente" :error="form.errors.customer_id">
+                                    <VueMultiselect v-model="form.customer_id" :options="customers.data" :searchable="true"
+                                        :close-on-select="true" :show-labels="false" placeholder="Elige un Cliente"
+                                        label="name" track-by="id" />
+                                </Field>
+                            </div>
+                            <div class="col-span-6 sm:col-span-3">
+                                <Field label="Seleccionar Pais" :error="form.errors.country_id">
+                                    <VueMultiselect v-model="form.country_id" :options="countries.data" :searchable="true"
+                                        :show-labels="false" :close-on-select="true" placeholder="Elige un Pais"
+                                        label="name" track-by="id" />
+                                </Field>
+                            </div>
+                            <div class="col-span-6 sm:col-span-3">
+                                <Field label="Seleccionar Estado" :error="form.errors.state_id">
+                                    <VueMultiselect v-model="form.state_id" :options="states" :close-on-select="true"
+                                        placeholder="Elige un Estado" label="name" track-by="id"
+                                        :disabled="!form.country_id" />
+                                </Field>
+                            </div>
+                            <div class="col-span-6 sm:col-span-3">
+                                <Field label="Nombre" :error="form.errors.name">
+                                    <Input v-model="form.name" type="text" />
+                                </Field>
+                            </div>
+                            <div class="col-span-6 sm:col-span-3">
+                                <Field label="Telefono" :error="form.errors.phone">
+                                    <Input v-model="form.phone" type="text" />
+                                </Field>
+                            </div>
+                            <div class="col-span-6 sm:col-span-3">
+                                <Field label="Telefono" :error="form.errors.address">
+                                    <Input v-model="form.address" type="text" />
+                                </Field>
+                            </div>
+                            <div class="col-span-6 sm:col-span-3">
+                                <Field label="Telefono" :error="form.errors.ubication">
+                                    <Input v-model="form.ubication" type="text" />
+                                </Field>
+                            </div>
                             <div class="col-span-6 sm:col-full">
                                 <LoadingButton :loading="form.processing"
                                     class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">

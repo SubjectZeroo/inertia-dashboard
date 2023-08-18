@@ -26,7 +26,8 @@ class StoreCustomerRequest extends FormRequest
         return [
             'name' => ['string', 'required'],
             'identification' => ['string', 'required', Rule::unique('customers', 'identification')->ignore($this->customer)],
-            'email' => ['string', 'required',  Rule::unique('customers', 'email')->ignore($this->customer)]
+            'email' => ['string', 'required',  Rule::unique('customers', 'email')->ignore($this->customer)],
+            'customer_type_id' => ['required','exists:customer_types,id']
         ];
     }
 }

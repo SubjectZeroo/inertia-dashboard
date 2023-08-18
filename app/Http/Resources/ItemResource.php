@@ -21,9 +21,9 @@ class ItemResource extends JsonResource
             'description' => $this->description,
             'price' => $this->price,
             'cost' => $this->cost,
-            'units' => UnitResource::collection($this->whenLoaded('units')),
-            'item_brands' => ItemBrandResource::collection($this->whenLoaded('item_brands')),
-            'item_categories' => ItemCategoryResource::collection($this->whenLoaded('item_categories')),
+            'unit' => new UnitResource($this->unit),
+            'item_brand' => new ItemBrandResource($this->item_brand),
+            'item_category' => new ItemCategoryResource($this->item_category),
         ];
     }
 }
